@@ -66,3 +66,65 @@ The following is the structure of a directory file named “rockpaperscissors.zi
  ├── 📃README_rps-cv-images.txt
 ```
 
+
+## Dataset Preprocessing
+To variance in the training data, we used `ImageDataGenerator` function to augment the train Dataset.
+### Augmenting Images
+```python
+train_datagen = ImageDataGenerator(
+    rescale=(1/255.),              # normalize the image vector, by dividing with 255.
+    width_shift_range=0.2,         # randomize shifting width in the range of 0.2
+    height_shift_range=0.2,        # randomize shifting height in the range of 0.2
+    zoom_range=0.2,                # randomize zoom in the range of 0.2
+    shear_range=0.2,               # randomize shear in the range of 0.2
+    rotation_range=20,             # randomize rotation in the range of 20 degree
+    brightness_range=[0.8,1.2],    # randomize brightness in between 0.8 - 1.2
+    horizontal_flip=True,          # randomly flipping the image
+    validation_split = 0.4,        # divide training data 1314 samples, and validation data 874 samples
+    fill_mode="nearest"            # use fill mode if dataset background are plain color
+)
+```
+
+Using the previous image data generator object to label training data and validation data. 
+```python
+train_generator = train_datagen.flow_from_directory(
+    base_dir,
+    target_size = (100, 150),     # rescale image menjadi ukuran 100x150 pixels
+    class_mode = 'categorical',   # tipe label (>2)
+    subset = 'training'
+)
+
+validation_generator = train_datagen.flow_from_directory(
+    base_dir,
+    target_size = (100, 150),
+    class_mode = 'categorical',
+    subset = 'validation'
+)
+
+print(train_generator.class_indices)
+```
+```
+Found 1314 images belonging to 3 classes.
+Found 874 images belonging to 3 classes.
+{'paper': 0, 'rock': 1, 'scissors': 2}
+```
+
+### Plotting the Augmented image
+```python
+target_labels = next(os.walk(base_dir))[1]
+target_labels.sort()
+batch = next(train_generator)
+batch_images = np.array(batch[0])
+batch_labels = np.array(batch[1])
+
+target_labels = np.asarray(target_labels)
+
+plt.figure(figsize=(15,10))
+for n, i in enumerate(np.arange(10)):
+    ax = plt.subplot(3,5,n+1)
+    plt.imshow(batch_images[i])
+    plt.title(target_labels[np.where(batch_labels[i]==1)[0][0]])
+    plt.axis('off')
+```
+![image](https://user-images.githubusercontent.com/63284781/127087418-f384e86e-e327-4e8a-9ee0-af7027f31766.png)
+    

@@ -3,8 +3,6 @@
 
 Image Classification of Rock-Paper-Scissors Hand Gesture Pictures using Convolutional Neural Network (CNN). 
 
-This is my submission for Dicoding Academy: [Belajar Machine Learning untuk Pemula](https://www.dicoding.com/academies/184)
-
 ## Full Code 
 [![Open In Collab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1N_tvqxojAXQhEyXElCzzHLIBx5E9eH4r?usp=sharing) 
 
